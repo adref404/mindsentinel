@@ -1,0 +1,525 @@
+/* 
+MindSentinel - Tema Clínico Profesional
+=========================================
+Paleta de colores médica: Azules, blancos, grises
+Sin emojis, diseño minimalista y profesional
+*/
+
+/* ========== VARIABLES DE COLOR ========== */
+:root {
+    /* Colores principales - Azul médico */
+    --primary-blue: #0056b3;
+    --primary-blue-light: #4a90e2;
+    --primary-blue-dark: #003d82;
+    
+    /* Colores secundarios - Grises clínicos */
+    --gray-50: #f8f9fa;
+    --gray-100: #e9ecef;
+    --gray-200: #dee2e6;
+    --gray-300: #ced4da;
+    --gray-400: #adb5bd;
+    --gray-500: #6c757d;
+    --gray-600: #495057;
+    --gray-700: #343a40;
+    --gray-800: #212529;
+    
+    /* Colores de estado clínico */
+    --risk-critical: #dc3545;      /* Riesgo Alto */
+    --risk-warning: #fd7e14;       /* Riesgo Medio */
+    --risk-safe: #28a745;          /* Riesgo Bajo */
+    --risk-info: #17a2b8;          /* Información */
+    
+    /* Fondos */
+    --bg-main: #ffffff;
+    --bg-secondary: #f4f6f9;
+    --bg-card: #ffffff;
+    --bg-header: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+    
+    /* Texto */
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-white: #ffffff;
+    
+    /* Bordes */
+    --border-color: #dee2e6;
+    --border-radius: 8px;
+    --border-radius-lg: 12px;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    
+    /* Espaciado */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+}
+
+/* ========== ESTILOS GLOBALES ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* Ocultar elementos de Streamlit innecesarios */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+
+/* ========== HEADER PROFESIONAL ========== */
+.clinical-header {
+    background: var(--bg-header);
+    color: var(--text-white);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.clinical-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.clinical-header .subtitle {
+    font-size: 1.1rem;
+    font-weight: 400;
+    opacity: 0.95;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.clinical-header .logo-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+/* ========== TARJETAS PROFESIONALES ========== */
+.clinical-card {
+    background: var(--bg-card);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.clinical-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.clinical-card-header {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+/* ========== RESULTADOS DE EVALUACIÓN ========== */
+.risk-assessment {
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-lg) 0;
+    border-left: 5px solid;
+    background: white;
+    box-shadow: var(--shadow-md);
+}
+
+.risk-assessment.high-risk {
+    border-left-color: var(--risk-critical);
+    background: linear-gradient(to right, rgba(220, 53, 69, 0.05), white);
+}
+
+.risk-assessment.medium-risk {
+    border-left-color: var(--risk-warning);
+    background: linear-gradient(to right, rgba(253, 126, 20, 0.05), white);
+}
+
+.risk-assessment.low-risk {
+    border-left-color: var(--risk-safe);
+    background: linear-gradient(to right, rgba(40, 167, 69, 0.05), white);
+}
+
+.risk-level {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+}
+
+.risk-level.high-risk { color: var(--risk-critical); }
+.risk-level.medium-risk { color: var(--risk-warning); }
+.risk-level.low-risk { color: var(--risk-safe); }
+
+.probability-display {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: var(--spacing-md) 0;
+    color: var(--primary-blue);
+}
+
+/* ========== BADGES Y ETIQUETAS ========== */
+.clinical-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-critical {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--risk-critical);
+    border: 1px solid var(--risk-critical);
+}
+
+.badge-warning {
+    background: rgba(253, 126, 20, 0.1);
+    color: var(--risk-warning);
+    border: 1px solid var(--risk-warning);
+}
+
+.badge-safe {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--risk-safe);
+    border: 1px solid var(--risk-safe);
+}
+
+.badge-info {
+    background: rgba(23, 162, 184, 0.1);
+    color: var(--risk-info);
+    border: 1px solid var(--risk-info);
+}
+
+/* ========== FORMULARIOS ========== */
+.clinical-form {
+    background: var(--bg-card);
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}
+
+/* ========== BOTONES PROFESIONALES ========== */
+.btn-clinical {
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-blue-dark);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--gray-500);
+    color: white;
+}
+
+.btn-danger {
+    background: var(--risk-critical);
+    color: white;
+}
+
+/* ========== TABLAS DE HISTORIAL ========== */
+.clinical-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.clinical-table thead {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.clinical-table th {
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.clinical-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.clinical-table tbody tr:hover {
+    background: var(--gray-50);
+    cursor: pointer;
+}
+
+/* ========== DASHBOARD METRICS ========== */
+.metric-card {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    border: 2px solid var(--border-color);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-lg);
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-sm);
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ========== GRÁFICOS Y VISUALIZACIONES ========== */
+.chart-container {
+    background: white;
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    margin: var(--spacing-lg) 0;
+}
+
+/* ========== ALERTAS CLÍNICAS ========== */
+.clinical-alert {
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    margin: var(--spacing-md) 0;
+    border-left: 4px solid;
+    font-weight: 500;
+}
+
+.alert-critical {
+    background: rgba(220, 53, 69, 0.1);
+    border-left-color: var(--risk-critical);
+    color: var(--risk-critical);
+}
+
+.alert-warning {
+    background: rgba(253, 126, 20, 0.1);
+    border-left-color: var(--risk-warning);
+    color: var(--risk-warning);
+}
+
+.alert-info {
+    background: rgba(23, 162, 184, 0.1);
+    border-left-color: var(--risk-info);
+    color: var(--risk-info);
+}
+
+/* ========== SIDEBAR PROFESIONAL ========== */
+.clinical-sidebar {
+    background: white;
+    padding: var(--spacing-lg);
+    border-right: 2px solid var(--border-color);
+    height: 100vh;
+}
+
+.sidebar-section {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-md);
+}
+
+/* ========== PROGRESS BAR CLÍNICO ========== */
+.clinical-progress {
+    width: 100%;
+    height: 12px;
+    background: var(--gray-200);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: var(--spacing-md) 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
+    transition: width 0.6s ease;
+}
+
+.progress-fill.risk-high {
+    background: linear-gradient(90deg, #dc3545, #e74c3c);
+}
+
+.progress-fill.risk-medium {
+    background: linear-gradient(90deg, #fd7e14, #ff9800);
+}
+
+.progress-fill.risk-low {
+    background: linear-gradient(90deg, #28a745, #4caf50);
+}
+
+/* ========== SECCIÓN DE AGENTES ========== */
+.agent-section {
+    background: var(--bg-card);
+    border-left: 4px solid var(--primary-blue);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+    border-radius: var(--border-radius);
+}
+
+.agent-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-md);
+}
+
+.agent-content {
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
+    .clinical-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .risk-assessment {
+        padding: var(--spacing-md);
+    }
+    
+    .probability-display {
+        font-size: 2rem;
+    }
+    
+    .metric-card {
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+/* ========== ANIMACIONES SUTILES ========== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ========== TOOLTIPS PROFESIONALES ========== */
+.clinical-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    background: var(--gray-800);
+    color: white;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.clinical-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ========== FOOTER PROFESIONAL ========== */
+.clinical-footer {
+    text-align: center;
+    padding: var(--spacing-xl);
+    background: var(--bg-card);
+    border-top: 2px solid var(--border-color);
+    margin-top: var(--spacing-xl);
+    color: var(--text-secondary);
+}
+
+.clinical-footer strong {
+    color: var(--primary-blue);
+}

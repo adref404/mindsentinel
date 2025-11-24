@@ -32,3 +32,5 @@ litellm
 # --- Utilidades ---
 python-dotenv
 kagglehub
+sqlite3
+nltk

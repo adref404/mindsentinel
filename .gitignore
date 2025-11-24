@@ -27,3 +27,5 @@ checkpoints/
 *.ckpt
 #ignorar csv
 *.csv
+
+build/
