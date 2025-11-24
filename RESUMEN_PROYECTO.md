@@ -59,150 +59,9 @@
    - Documentación completa del proyecto
    - Guía de instalación y uso
 
-6. **`INSTRUCCIONES_CONEXION.md`** (18 KB)
-   - Guía detallada de conexión entre scripts
-   - Troubleshooting y diagramas
-
-7. **`.env.example`** (470 bytes)
+6. **`.env.example`** (470 bytes)
    - Plantilla para variables de entorno
    - Configuración de GOOGLE_API_KEY
-
----
-
-## 🚀 Inicio Rápido (5 Pasos)
-
-### 1️⃣ Preparar Entorno
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# o: venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-```
-
-### 2️⃣ Descargar Dataset
-```bash
-# Kaggle: Mental Health Social Media Dataset
-kaggle datasets download -d infamouscoder/mental-health-social-media
-unzip mental-health-social-media.zip
-```
-
-### 3️⃣ Entrenar Modelo
-```bash
-python train_model.py
-# Espera 10-30 minutos
-# Genera: modelo_depresion.h5, tokenizer.pickle, model_config.pickle
-```
-
-### 4️⃣ Configurar API de Gemini
-```bash
-export GOOGLE_API_KEY='tu_api_key_aqui'
-# Obtén tu API Key gratis en: https://makersuite.google.com/app/apikey
-```
-
-### 5️⃣ Ejecutar Aplicación
-```bash
-streamlit run app.py
-# Se abre en http://localhost:8501
-```
-
----
-
-## 🏗️ Arquitectura del Sistema
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    ENTRADA DEL USUARIO                  │
-│              (Simulación de post de Reddit)             │
-└─────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│                  AGENTE 1: CLASIFICADOR                 │
-│                                                         │
-│  • Tecnología: LSTM Bidireccional (TensorFlow)         │
-│  • Input: Texto limpio y tokenizado                    │
-│  • Output: Probabilidad de depresión (0-100%)          │
-│  • Clasificación: BAJO / MEDIO / ALTO riesgo           │
-└─────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│              AGENTE 2: EXPLICADOR XAI                   │
-│                                                         │
-│  • Tecnología: Google Gemini 1.5 Flash                 │
-│  • Input: Texto original + probabilidad del Agente 1   │
-│  • Análisis:                                           │
-│    - Palabras clave emocionales                        │
-│    - Patrones lingüísticos depresivos                  │
-│    - Distorsiones cognitivas                           │
-│    - Tono emocional general                            │
-│  • Output: Explicación detallada y científica          │
-└─────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│             AGENTE 3: SUPERVISOR CLÍNICO                │
-│                                                         │
-│  • Tecnología: Google Gemini 1.5 Flash                 │
-│  • Input: Texto + Predicción + Explicación XAI         │
-│  • Decisión Final:                                     │
-│    - Riesgo ALTO → Alerta clínica urgente              │
-│    - Riesgo MEDIO → Monitoreo y apoyo                  │
-│    - Riesgo BAJO → Refuerzo positivo                   │
-│  • Output: Recomendaciones + recursos de ayuda         │
-└─────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│               INTERFAZ DE USUARIO (STREAMLIT)           │
-│                                                         │
-│  • Visualización de probabilidad                       │
-│  • Explicación interpretable                           │
-│  • Recomendaciones personalizadas                      │
-│  • Recursos de ayuda (líneas telefónicas, terapias)    │
-└─────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📊 Especificaciones Técnicas
-
-### Modelo de Deep Learning
-
-| Componente | Especificación |
-|------------|----------------|
-| **Arquitectura** | LSTM Bidireccional |
-| **Capas** | Embedding → SpatialDropout → Bi-LSTM (64) → Bi-LSTM (32) → GlobalMaxPooling → Dense (64) → Dense (32) → Sigmoid |
-| **Vocabulario** | 10,000 palabras |
-| **Longitud de secuencia** | 200 tokens |
-| **Embedding dimension** | 128 |
-| **Optimizador** | Adam (lr=0.001) |
-| **Loss function** | Binary Crossentropy |
-| **Métricas** | Accuracy, Precision, Recall, AUC-ROC |
-
-### Métricas de Rendimiento Esperadas
-
-| Métrica | Valor |
-|---------|-------|
-| Accuracy | 85-90% |
-| Precision | 82-88% |
-| Recall | 80-85% |
-| AUC-ROC | 0.88-0.92 |
-
-### Sistema Multi-Agente
-
-| Agente | Tecnología | Función |
-|--------|-----------|---------|
-| **Clasificador** | TensorFlow/Keras | Predicción cuantitativa |
-| **Explicador XAI** | Google Gemini 1.5 Flash | Interpretabilidad |
-| **Supervisor** | Google Gemini 1.5 Flash | Decisión clínica |
-
-### Orquestación
-
-- **Framework**: CrewAI 0.1.27
-- **Proceso**: Sequential (un agente a la vez)
-- **LLM Provider**: LangChain Google GenAI
-- **Modelo**: gemini-1.5-flash (gratuito)
 
 ---
 
@@ -341,23 +200,10 @@ Uso académico e investigación. No usar en producción médica sin validación 
 
 ---
 
-## 📊 Estadísticas del Proyecto
-
-| Métrica | Valor |
-|---------|-------|
-| Líneas de código (Python) | ~1,200 |
-| Archivos principales | 7 |
-| Dependencias | 15 paquetes |
-| Tiempo de entrenamiento | 10-30 min |
-| Tiempo de inferencia | 5-10 seg |
-| Tamaño del modelo | ~45 MB |
-
----
-
 ## 🎉 ¡Comienza Ahora!
 
 1. **Descarga** todos los archivos del proyecto
-2. **Sigue** las instrucciones en `INSTRUCCIONES_CONEXION.md`
+2. **Sigue** las instrucciones
 3. **Entrena** el modelo con `train_model.py`
 4. **Ejecuta** la aplicación con `streamlit run app.py`
 5. **Explora** y mejora el sistema
@@ -370,6 +216,5 @@ Uso académico e investigación. No usar en producción médica sin validación 
 
 ---
 
-📅 **Última actualización:** Noviembre 2025
-🔖 **Versión:** 1.0
-⭐ **Estado:** Listo para uso académico
+**Última actualización:** Noviembre 2025
+**Versión:** 1.0
