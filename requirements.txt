@@ -1,0 +1,30 @@
+# MindSentinel - Dependencias del Proyecto
+# ==========================================
+
+# --- Deep Learning ---
+tensorflow
+keras
+
+# --- Data Science ---
+numpy
+pandas
+scikit-learn
+
+# --- Visualización ---
+matplotlib
+seaborn
+
+# --- NLP ---
+nltk
+
+# --- Frontend ---
+streamlit
+
+# --- Multi-Agente y LLM ---
+crewai
+langchain
+langchain-google-genai
+google-generativeai
+
+# --- Utilidades ---
+python-dotenv

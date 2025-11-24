@@ -1,0 +1,29 @@
+# ignorar para python virtual environments
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+# ignorar env
+.env
+.venv
+# ignorar archivos de entorno de desarrollo
+.vscode/
+.idea/
+# ignorar archivos de logs
+*.log
+# ignorar archivos de base de datos
+*.sqlite3
+# ignorar archivos temporales
+*.tmp
+# ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+# ignorar archivos de configuración local
+config.json
+local_settings.py
+# ignorar archivos de checkpoints de modelos
+checkpoints/
+*.ckpt
+#ignorar csv
+*.csv
