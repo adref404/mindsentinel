@@ -37,7 +37,7 @@
 ### Paso 1: Clonar el Repositorio
 
 ```bash
-git clone <tu-repositorio>
+git clone https://github.com/adref404/mindsentinel.git
 cd mindsentinel
 ```
 
@@ -54,14 +54,26 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### Paso 3: Instalar Dependencias
+### Paso 3: Crear archivo .env desde .env.example
+```bash
+# Windows (PowerShell)
+Copy-Item .env.example .env
+
+# Windows (CMD)
+copy .env.example .env
+
+# Linux / Mac
+cp .env.example .env
+```
+
+### Paso 4: Instalar Dependencias
 
 ```bash
 python.exe -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Paso 4: Obtener API Key de Google Gemini
+### Paso 5: Obtener API Key de Google Gemini
 
 1. Ve a [Google AI Studio](https://makersuite.google.com/app/apikey)
 2. Crea una API Key gratuita
@@ -92,7 +104,7 @@ $env:GOOGLE_API_KEY='tu_api_key_aqui'
 
 ```bash
 # Instalar kagglehub
-pip install kagglehub
+# pip install kagglehub # está en requirements.txt
 
 # El script train_model.py descargará automáticamente el dataset con:
 import kagglehub
@@ -107,7 +119,7 @@ path = kagglehub.dataset_download("rishabhkausish/reddit-depression-dataset")
 **Opción 3: API de Kaggle**
 
 ```bash
-pip install kaggle
+# pip install kaggle
 kaggle datasets download -d rishabhkausish/reddit-depression-dataset
 unzip reddit-depression-dataset.zip
 ```
@@ -115,13 +127,13 @@ unzip reddit-depression-dataset.zip
 ### Formato del Dataset
 
 El archivo contiene estas columnas:
-- `Subreddit`: Subreddit donde se publicó el post
-- `Title`: Título del post
-- `Body`: Contenido del post
-- `Upvotes`: Número de upvotes
-- `Created UTC`: Timestamp de creación
-- `Number of Comments`: Número de comentarios
-- `Label`: 0 (Normal) o 1 (Depresión)
+- `subreddit`: Subreddit donde se publicó el post
+- `title`: Título del post
+- `body`: Contenido del post
+- `upvotes`: Número de upvotes
+- `created_utc`: Timestamp de creación
+- `number_of_comments`: Número de comentarios
+- `label`: 0 (Normal) o 1 (Depresión)
 
 ---
 
@@ -157,7 +169,7 @@ Se abrirá automáticamente en tu navegador en `http://localhost:8501`
 
 ## 💻 Guía de Uso de la Interfaz
 
-### 1. Entrada de Datos
+### 1. Entrada de Datos (En Inglés)
 
 - **Título del Post**: Escribe un título simulado de Reddit
 - **Subreddit**: Selecciona el contexto (r/depression, r/mentalhealth, etc.)
@@ -166,11 +178,9 @@ Se abrirá automáticamente en tu navegador en `http://localhost:8501`
 **Ejemplo de entrada:**
 
 ```
-Título: "No sé qué hacer con mi vida"
+Title: I can't go on like this
 Subreddit: r/depression
-Cuerpo: "Últimamente me siento completamente vacío. No encuentro 
-motivación para hacer nada, ni siquiera las cosas que antes me 
-gustaban. Siento que soy una carga para todos..."
+Cuerpo: I don’t feel anything anymore. Every day it gets harder to get out of bed. I don’t see the point of trying anymore. I feel completely alone and empty. Everyone would be better off without me.
 ```
 
 ### 2. Análisis Multi-Agente
@@ -220,12 +230,12 @@ Métricas: Accuracy, Precision, Recall, AUC-ROC
 - **Salida**: Probabilidad + nivel de riesgo
 
 **Agente 2: Explicador XAI**
-- **Tecnología**: Google Gemini 1.5 Flash
+- **Tecnología**: Google Gemini 2.5 Flash
 - **Función**: Interpretabilidad del modelo
 - **Salida**: Análisis lingüístico detallado
 
 **Agente 3: Supervisor**
-- **Tecnología**: Google Gemini 1.5 Flash
+- **Tecnología**: Google Gemini 2.5 Flash
 - **Función**: Decisión clínica final
 - **Salida**: Recomendaciones + recursos
 
@@ -376,7 +386,7 @@ Este proyecto es de uso académico. No usar en producción sin supervisión méd
 
 **Tecnologías:** TensorFlow • CrewAI • Google Gemini • Streamlit
 
-**Contacto:** [Tu correo académico]
+**Contacto:** fernando.celadita@unmsm.edu.pe
 
 ---
 
