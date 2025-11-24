@@ -353,7 +353,7 @@ def tarea_decision_final(agente, texto_usuario, resultado_clasificador, explicac
            - REFUERZO POSITIVO (riesgo bajo)
         
         3. Proporciona recomendaciones específicas:
-           - Líneas de ayuda (España: 024, México: 800 290 0024, etc.)
+           - Líneas de ayuda (Perú: 0800-10828, México: 800 290 0024, etc.)
            - Tipos de terapia recomendados
            - Recursos digitales (apps, comunidades de apoyo)
            - Acciones inmediatas a tomar
@@ -485,7 +485,7 @@ with st.sidebar:
     NO reemplaza el diagnóstico profesional.
     
     **En crisis, contacta:**
-    - 🇪🇸 España: 024
+    - pe Perú: 0800-10828
     - 🇲🇽 México: 800 290 0024
     - 🇦🇷 Argentina: 135
     """)
@@ -601,8 +601,8 @@ if analizar_btn:
             
             with col1:
                 st.info("""
-                **🇪🇸 España**
-                - Teléfono: 024
+                **pe Perú**
+                - Teléfono: 0800-10828
                 - Servicio 24/7 gratuito
                 """)
             
