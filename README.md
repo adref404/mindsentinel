@@ -523,7 +523,7 @@ def crear_agente_monitor():
 - [ ] Análisis multimodal (texto + imágenes)
 - [ ] Dashboard de monitoreo temporal
 - [ ] API REST para integración con otras apps
-- [ ] Soporte para más idiomas (actualmente: español e inglés)
+- [ ] Soporte para más idiomas (actualmente: inglés)
 - [ ] Detección de otras condiciones (ansiedad, PTSD)
 - [ ] Sistema de feedback para mejorar el modelo
 
