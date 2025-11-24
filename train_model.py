@@ -2,9 +2,10 @@
 MindSentinel - Script de Entrenamiento del Modelo de Deep Learning
 =====================================================================
 Arquitectura: LSTM Bidireccional con Embeddings pre-entrenados
-Dataset: Reddit Depression Dataset (Kaggle)
+Dataset: Reddit Depression Dataset (Kaggle - rishabhkausish)
+Subreddits: teenagers, depression, suicidewatch, deepthoughts, happy, posts
 Autor: Arquitecto de Software Senior
-Compatible con: Google Colab
+Compatible con: Google Colab / Local
 """
 
 import numpy as np
@@ -38,41 +39,105 @@ print("🧠 MINDSENTINEL - ENTRENAMIENTO DE MODELO DE DETECCIÓN DE DEPRESIÓN")
 print("=" * 80)
 
 # ============================================================================
-# 1. CARGA Y EXPLORACIÓN DEL DATASET
+# 1. DESCARGA Y CARGA DEL DATASET
 # ============================================================================
-print("\n[1/7] Cargando dataset...")
+print("\n[1/7] Descargando y cargando dataset desde Kaggle...")
 
-# En Google Colab, primero debes subir el archivo o conectar con Kaggle
-# Opción 1: Subida manual
-# from google.colab import files
-# uploaded = files.upload()
-
-# Opción 2: Descarga directa desde Kaggle (recomendado)
-# !pip install -q kaggle
-# !mkdir -p ~/.kaggle
-# !cp kaggle.json ~/.kaggle/
-# !chmod 600 ~/.kaggle/kaggle.json
-# !kaggle datasets download -d infamouscoder/mental-health-social-media
-# !unzip mental-health-social-media.zip
-
-# Carga del dataset
+# Opción 1: Usar kagglehub (RECOMENDADO)
 try:
-    df = pd.read_csv('depression_dataset.csv')
-    print(f"✓ Dataset cargado: {df.shape[0]} registros, {df.shape[1]} columnas")
+    import kagglehub
+    import os
+    print("📥 Descargando dataset con kagglehub...")
+    path = kagglehub.dataset_download("rishabhkausish/reddit-depression-dataset")
+    print(f"✓ Dataset descargado en: {path}")
+    
+    # Buscar el archivo CSV en el path descargado
+    csv_files = [f for f in os.listdir(path) if f.endswith('.csv')]
+    
+    if csv_files:
+        dataset_path = os.path.join(path, csv_files[0])
+        print(f"✓ Archivo encontrado: {csv_files[0]}")
+    else:
+        print("❌ No se encontró archivo CSV en el directorio descargado")
+        dataset_path = 'reddit_depression_dataset.csv'  # Fallback
+        
+except ImportError:
+    print("⚠️  kagglehub no instalado. Instala con: pip install kagglehub")
+    print("📌 Buscando archivo local...")
+    dataset_path = 'reddit_depression_dataset.csv'
+except Exception as e:
+    print(f"⚠️  Error al descargar: {e}")
+    print("📌 Buscando archivo local...")
+    dataset_path = 'reddit_depression_dataset.csv'
+
+# Opción 2: Si ya tienes el archivo local
+# dataset_path = 'reddit_depression_dataset.csv'
+
+# Cargar dataset
+try:
+    df = pd.read_csv(dataset_path, low_memory=False)
+    print(f"\n✓ Dataset cargado exitosamente")
+    print(f"\n✓ Dataset cargado. Dimensiones originales: {df.shape}")
+
+    # TRUCO: Convertir todo a minúsculas para evitar errores de 'Subreddit' vs 'subreddit'
+    df.columns = df.columns.str.lower()
+    
+    # Renombrar columnas para estandarizar
+    # Mapeamos 'body' -> 'text' (input) y 'label' -> 'label' (target)
+    rename_map = {
+        'body': 'text',
+        'title': 'title',
+        'subreddit': 'source', 
+        'label': 'label'
+    }
+    df = df.rename(columns=rename_map)
+    
+    # Verificar que existen las columnas críticas
+    if 'text' not in df.columns or 'label' not in df.columns:
+        raise ValueError(f"Faltan columnas críticas. Disponibles: {df.columns.tolist()}")
+    
 except FileNotFoundError:
-    print("❌ Error: No se encontró 'depression_dataset.csv'")
-    print("📌 Asegúrate de tener el archivo en el directorio actual")
+    print(f"\n❌ Error: No se encontró '{dataset_path}'")
+    print("\n📌 Opciones de solución:")
+    print("   1. Instala kagglehub: pip install kagglehub")
+    print("   2. Descarga manualmente desde: https://www.kaggle.com/datasets/rishabhkausish/reddit-depression-dataset")
+    print("   3. Coloca el archivo CSV en el directorio actual")
     exit(1)
 
-# Exploración básica
-print(f"\n📊 Distribución de clases:")
-print(df['Label'].value_counts())
-print(f"\n📈 Proporción:")
-print(df['Label'].value_counts(normalize=True))
+# --- 3. REDUCCIÓN DEL DATASET (SAMPLING) ---
+# IMPORTANTE: 2.4 Millones de filas es demasiado para entrenar rápido.
+# Vamos a tomar una muestra balanceada de 20,000 registros (10k depresión, 10k normal).
 
-# Verificar valores nulos
-print(f"\n🔍 Valores nulos: {df.isnull().sum().sum()}")
-df = df.dropna(subset=['Body', 'Label'])
+print("\n✂️ Aplicando Sampling (Reducción de datos para eficiencia)...")
+SAMPLE_SIZE = 10000  # 10k por clase = 20k total. (Sube esto si tienes GPU potente)
+
+df_dep = df[df['label'] == 1]
+df_norm = df[df['label'] == 0]
+
+# Tomar muestra aleatoria
+if len(df_dep) > SAMPLE_SIZE:
+    df_dep = df_dep.sample(n=SAMPLE_SIZE, random_state=42)
+if len(df_norm) > SAMPLE_SIZE:
+    df_norm = df_norm.sample(n=SAMPLE_SIZE, random_state=42)
+
+# Combinar y mezclar (shuffle)
+df = pd.concat([df_dep, df_norm])
+df = df.sample(frac=1, random_state=42).reset_index(drop=True)
+
+# Limpieza básica de nulos en el texto final
+df = df.dropna(subset=['text', 'label'])
+df['text'] = df['text'].astype(str) # Asegurar que sea string
+
+print(f"✓ Dataset reducido y listo: {len(df)} registros")
+print("-" * 30)
+print(df['label'].value_counts())
+print("-" * 30)
+
+# --- 4. CONTINUAR FLUJO ---
+# Variables finales para el resto del script
+print(f"\n📋 Columnas finales usadas: {df.columns.tolist()}")
+print(f"📊 Ejemplo de texto:\n {df['text'].iloc[0][:100]}...")
+
 
 # ============================================================================
 # 2. PREPROCESAMIENTO DE TEXTO NLP
@@ -101,6 +166,9 @@ def clean_text(text):
     # Remover subreddit links (r/subreddit)
     text = re.sub(r'r/\w+', '', text)
     
+    # Remover u/username
+    text = re.sub(r'u/\w+', '', text)
+    
     # Mantener puntuación emocional (!, ?, ...)
     # Remover otros caracteres especiales pero mantener apóstrofes
     text = re.sub(r'[^\w\s!?.\']', ' ', text)
@@ -113,14 +181,33 @@ def clean_text(text):
     
     return text
 
+# Combinar title y text (body) para análisis completo
+# CORRECCIÓN: usar 'text' en lugar de 'Body' (ya renombrado a minúsculas)
+print("📝 Combinando title + text...")
+
+# Manejar valores nulos antes de combinar
+df['title'] = df['title'].fillna('')
+df['text'] = df['text'].fillna('')
+
+df['combined_text'] = df['title'].astype(str) + ". " + df['text'].astype(str)
+
 # Aplicar limpieza
-df['clean_text'] = df['Body'].apply(clean_text)
+print("🧹 Limpiando texto...")
+df['clean_text'] = df['combined_text'].apply(clean_text)
 
 # Filtrar textos muy cortos (menos de 10 caracteres)
 df = df[df['clean_text'].str.len() > 10]
 
-print(f"✓ Preprocesamiento completado. Registros válidos: {len(df)}")
-print(f"📝 Ejemplo de texto limpio:\n{df['clean_text'].iloc[0][:200]}...")
+print(f"\n✓ Preprocesamiento completado. Registros válidos: {len(df)}")
+print(f"\n📊 Estadísticas de longitud de texto:")
+print(f"   Media: {df['clean_text'].str.len().mean():.0f} caracteres")
+print(f"   Mediana: {df['clean_text'].str.len().median():.0f} caracteres")
+print(f"   Máximo: {df['clean_text'].str.len().max():.0f} caracteres")
+
+print(f"\n📝 Ejemplo de texto limpio:")
+print(f"Original (title): {df['title'].iloc[0][:100]}...")
+print(f"Original (text): {df['text'].iloc[0][:100]}...")
+print(f"Limpio: {df['clean_text'].iloc[0][:200]}...")
 
 # ============================================================================
 # 3. TOKENIZACIÓN Y SECUENCIACIÓN
@@ -149,11 +236,14 @@ sequences = tokenizer.texts_to_sequences(df['clean_text'])
 X = pad_sequences(sequences, maxlen=MAX_LEN, padding='post', truncating='post')
 
 # Labels
-y = df['Label'].values
+y = df['label'].values
 
 print(f"✓ Vocabulario creado: {len(tokenizer.word_index)} palabras únicas")
 print(f"✓ Secuencias generadas: {X.shape}")
-print(f"✓ Palabras más frecuentes: {list(tokenizer.word_index.items())[:10]}")
+print(f"✓ Vocabulario usado: {min(MAX_WORDS, len(tokenizer.word_index))} palabras")
+print(f"\n🔤 Palabras más frecuentes:")
+word_freq = sorted(tokenizer.word_index.items(), key=lambda x: x[1])[:15]
+print(f"   {word_freq}")
 
 # ============================================================================
 # 4. DIVISIÓN DEL DATASET
@@ -169,9 +259,9 @@ X_train, X_val, y_train, y_val = train_test_split(
     X_temp, y_temp, test_size=0.176, random_state=42, stratify=y_temp
 )  # 0.176 de 0.85 ≈ 0.15 del total
 
-print(f"✓ Train: {X_train.shape[0]} muestras ({y_train.mean()*100:.1f}% positivos)")
-print(f"✓ Validation: {X_val.shape[0]} muestras ({y_val.mean()*100:.1f}% positivos)")
-print(f"✓ Test: {X_test.shape[0]} muestras ({y_test.mean()*100:.1f}% positivos)")
+print(f"✓ Train set: {X_train.shape[0]} muestras ({y_train.mean()*100:.1f}% depresión)")
+print(f"✓ Validation set: {X_val.shape[0]} muestras ({y_val.mean()*100:.1f}% depresión)")
+print(f"✓ Test set: {X_test.shape[0]} muestras ({y_test.mean()*100:.1f}% depresión)")
 
 # ============================================================================
 # 5. CONSTRUCCIÓN DEL MODELO DE DEEP LEARNING
@@ -240,10 +330,16 @@ model.compile(
         tf.keras.metrics.AUC(name='auc')
     ]
 )
+# CORRECCIÓN: Construir el modelo antes de mostrar el resumen
+model.build(input_shape=(None, MAX_LEN))
 
 # Mostrar arquitectura
 print("\n📐 Arquitectura del modelo:")
 model.summary()
+
+# Contar parámetros
+total_params = model.count_params()
+print(f"\n📊 Total de parámetros entrenables: {total_params:,}")
 
 # ============================================================================
 # 6. ENTRENAMIENTO DEL MODELO
@@ -284,9 +380,12 @@ neg_weight = (1 / np.sum(y_train == 0)) * (len(y_train) / 2.0)
 pos_weight = (1 / np.sum(y_train == 1)) * (len(y_train) / 2.0)
 class_weight = {0: neg_weight, 1: pos_weight}
 
-print(f"⚖️ Pesos de clase: Negativo={neg_weight:.2f}, Positivo={pos_weight:.2f}")
+print(f"\n⚖️  Pesos de clase (para balanceo):")
+print(f"   Clase 0 (Normal): {neg_weight:.2f}")
+print(f"   Clase 1 (Depresión): {pos_weight:.2f}")
 
 # Entrenar modelo
+print("\n🚀 Iniciando entrenamiento...")
 history = model.fit(
     X_train, y_train,
     validation_data=(X_val, y_val),
@@ -314,9 +413,9 @@ print("📊 MÉTRICAS DE EVALUACIÓN EN TEST SET")
 print("=" * 80)
 
 test_loss, test_acc, test_precision, test_recall, test_auc = model.evaluate(X_test, y_test, verbose=0)
-print(f"\n🎯 Accuracy: {test_acc:.4f}")
-print(f"🎯 Precision: {test_precision:.4f}")
-print(f"🎯 Recall: {test_recall:.4f}")
+print(f"\n🎯 Accuracy: {test_acc:.4f} ({test_acc*100:.2f}%)")
+print(f"🎯 Precision: {test_precision:.4f} ({test_precision*100:.2f}%)")
+print(f"🎯 Recall: {test_recall:.4f} ({test_recall*100:.2f}%)")
 print(f"🎯 AUC-ROC: {test_auc:.4f}")
 
 # Reporte de clasificación detallado
@@ -333,7 +432,7 @@ plt.title('Matriz de Confusión - MindSentinel', fontsize=14, fontweight='bold')
 plt.ylabel('Etiqueta Real')
 plt.xlabel('Etiqueta Predicha')
 plt.savefig('confusion_matrix.png', dpi=300, bbox_inches='tight')
-print("✓ Matriz de confusión guardada: confusion_matrix.png")
+print("\n✓ Matriz de confusión guardada: confusion_matrix.png")
 
 # Curva ROC
 fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
@@ -418,7 +517,14 @@ config = {
     'test_accuracy': float(test_acc),
     'test_auc': float(test_auc),
     'test_precision': float(test_precision),
-    'test_recall': float(test_recall)
+    'test_recall': float(test_recall),
+    'dataset_info': {
+        'total_samples': len(df),
+        'train_samples': len(X_train),
+        'val_samples': len(X_val),
+        'test_samples': len(X_test),
+        'subreddits': df['source'].unique().tolist()
+    }
 }
 
 with open('model_config.pickle', 'wb') as handle:
@@ -433,7 +539,7 @@ print("🎉 ENTRENAMIENTO COMPLETADO EXITOSAMENTE")
 print("=" * 80)
 print(f"""
 📦 Artefactos generados:
-   1. modelo_depresion.h5 ............ Modelo LSTM entrenado
+   1. modelo_depresion.h5 ............ Modelo LSTM entrenado ({model.count_params():,} parámetros)
    2. tokenizer.pickle ............... Tokenizador de texto
    3. model_config.pickle ............ Configuración del modelo
    4. confusion_matrix.png ........... Visualización de métricas
@@ -446,8 +552,13 @@ print(f"""
    • Precision: {test_precision:.2%}
    • Recall: {test_recall:.2%}
 
+📈 Información del dataset:
+   • Total de muestras: {len(df):,}
+   • Subreddits analizados: {len(df['source'].unique())}
+   • {', '.join(df['source'].unique())}
+
 📌 Próximos pasos:
-   1. Descarga estos archivos desde Colab
+   1. Descarga estos archivos desde Colab (si aplica)
    2. Úsalos en el script app.py con Streamlit
    3. Los agentes de CrewAI utilizarán estos artefactos para predicción
 """)

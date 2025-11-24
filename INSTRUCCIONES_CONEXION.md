@@ -75,36 +75,45 @@ python test_system.py
 
 ### FASE 2: Obtener y Preparar Dataset
 
-#### Opción A: Kaggle API (Recomendado)
+#### Opción A: kagglehub (RECOMENDADO - Automático)
 
 ```bash
-# Instalar CLI de Kaggle
-pip install kaggle
+# Instalar kagglehub
+pip install kagglehub
 
-# Configurar credenciales (coloca tu kaggle.json en ~/.kaggle/)
+# El script train_model.py descargará automáticamente el dataset
+# No necesitas hacer nada más, el script incluye:
+import kagglehub
+path = kagglehub.dataset_download("rishabhkausish/reddit-depression-dataset")
+```
+
+#### Opción B: Kaggle CLI
+
+```bash
+pip install kaggle
 mkdir ~/.kaggle
 cp kaggle.json ~/.kaggle/
 chmod 600 ~/.kaggle/kaggle.json
-
-# Descargar dataset
-kaggle datasets download -d infamouscoder/mental-health-social-media
-unzip mental-health-social-media.zip
+kaggle datasets download -d rishabhkausish/reddit-depression-dataset
+unzip reddit-depression-dataset.zip
 ```
 
-#### Opción B: Descarga Manual
+#### Opción C: Descarga Manual
 
-1. Ve a: https://www.kaggle.com/datasets/infamouscoder/mental-health-social-media
-2. Descarga `depression_dataset.csv`
-3. Colócalo en el directorio `mindsentinel/`
+1. Ve a: https://www.kaggle.com/datasets/rishabhkausish/reddit-depression-dataset
+2. Descarga el archivo CSV
+3. Colócalo en el directorio `mindsentinel/` como `reddit_depression_dataset.csv`
 
 #### Verificar Dataset
 
 ```bash
-# Debe existir este archivo:
-ls -lh depression_dataset.csv
+# Si descargaste manualmente, verifica:
+ls -lh reddit_depression_dataset.csv
 
-# Verificar primeras líneas
-head -5 depression_dataset.csv
+# Ver estructura
+head -5 reddit_depression_dataset.csv
+
+# Columnas esperadas: Subreddit, Title, Body, Upvotes, Created UTC, Number of Comments, Label
 ```
 
 ---

@@ -78,10 +78,23 @@ except ImportError:
     sys.exit(1)
 
 # ============================================================================
+# 6.5. Verificar kagglehub (opcional pero recomendado)
+# ============================================================================
+print("\n[6.5/8] Verificando kagglehub (para descarga automática de dataset)...")
+try:
+    import kagglehub
+    print(f"✓ kagglehub instalado (descarga automática habilitada)")
+except ImportError:
+    print("⚠️  kagglehub no instalado (opcional)")
+    print("    Para descarga automática: pip install kagglehub")
+    print("    Alternativa: Descarga manual del dataset")
+
+# ============================================================================
 # 7. Verificar Artefactos del Modelo
 # ============================================================================
 print("\n[7/8] Verificando artefactos del modelo...")
 required_files = ['modelo_depresion.h5', 'tokenizer.pickle', 'model_config.pickle']
+alternative_dataset_names = ['reddit_depression_dataset.csv', 'depression_dataset.csv']
 missing_files = []
 
 for file in required_files:

@@ -15,6 +15,7 @@ import numpy as np
 import re
 import os
 from datetime import datetime
+from dotenv import load_dotenv
 
 # TensorFlow
 import tensorflow as tf
@@ -22,36 +23,60 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # CrewAI y LangChain
-from crewai import Agent, Task, Crew, Process
-from langchain_google_genai import ChatGoogleGenerativeAI
+# ✅ CORRECCIÓN: Usar LLM de CrewAI directamente
+from crewai import Agent, Task, Crew, Process, LLM
 
 # ============================================================================
 # CONFIGURACIÓN DE LA API DE GOOGLE GEMINI
 # ============================================================================
+# Cargar variables de entorno
+load_dotenv()
+
 # 🔑 IMPORTANTE: Configura tu API Key de Google Gemini aquí
 # Obtén tu API Key gratis en: https://makersuite.google.com/app/apikey
 
 # Opción 1: Variable de entorno (RECOMENDADO para producción)
 # export GOOGLE_API_KEY='tu_api_key_aqui'
-GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', '')
-
-# Opción 2: Hardcoded (SOLO para desarrollo/testing)
-if not GOOGLE_API_KEY:
-    GOOGLE_API_KEY = "TU_API_KEY_AQUI"  # 👈 Reemplaza esto con tu API Key
+# Obtener API Key
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Validar que la API Key esté configurada
-if GOOGLE_API_KEY == "TU_API_KEY_AQUI" or not GOOGLE_API_KEY:
-    st.error("⚠️ Por favor configura tu GOOGLE_API_KEY en el código o como variable de entorno")
+if not GOOGLE_API_KEY:
+    st.error("""
+    ⚠️ **API Key no configurada**
+    
+    Por favor:
+    1. Crea un archivo `.env` en la raíz del proyecto
+    2. Agrega la línea: `GOOGLE_API_KEY=tu_api_key_aqui`
+    3. Obtén tu API Key en: https://aistudio.google.com/app/apikey
+    4. Reinicia la aplicación
+    """)
     st.stop()
 
-# Configurar el modelo LLM de Google Gemini
-llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",  # Modelo gratuito y rápido
-    google_api_key=GOOGLE_API_KEY,
-    temperature=0.7,
-    convert_system_message_to_human=True
-)
-
+# ✅ SOLUCIÓN: Configurar LLM usando la clase LLM de CrewAI
+try:
+    llm = LLM(
+        model="gemini/gemini-2.5-flash",  # Prefijo "gemini/" es OBLIGATORIO
+        api_key=GOOGLE_API_KEY,
+        temperature=0.7
+    )
+    
+    # Test opcional: verificar que funciona
+    import google.generativeai as genai
+    genai.configure(api_key=GOOGLE_API_KEY)
+    
+except Exception as e:
+    st.error(f"""
+    ❌ **Error al configurar Google Gemini**
+    
+    Error: {str(e)}
+    
+    Posibles causas:
+    - API Key inválida
+    - Sin conexión a internet
+    - Límite de uso excedido
+    """)
+    st.stop()
 # ============================================================================
 # CONFIGURACIÓN DE STREAMLIT
 # ============================================================================
@@ -149,7 +174,7 @@ model, tokenizer, config = load_artifacts()
 # ============================================================================
 def clean_text(text):
     """
-    Limpieza de texto (debe ser idéntica al entrenamiento)
+    Limpieza de texto (IDÉNTICA a train_model.py)
     """
     if not isinstance(text, str):
         return ""
@@ -158,6 +183,7 @@ def clean_text(text):
     text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
     text = re.sub(r'@\w+', '', text)
     text = re.sub(r'r/\w+', '', text)
+    text = re.sub(r'u/\w+', '', text)  # Agregar u/username
     text = re.sub(r'[^\w\s!?.\']', ' ', text)
     text = re.sub(r'\d+', '', text)
     text = re.sub(r'\s+', ' ', text).strip()

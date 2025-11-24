@@ -57,7 +57,7 @@ source venv/bin/activate
 ### Paso 3: Instalar Dependencias
 
 ```bash
-python -m pip install --upgrade pip setuptools wheel
+python.exe -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
@@ -83,27 +83,45 @@ $env:GOOGLE_API_KEY='tu_api_key_aqui'
 
 ### Obtener el Dataset de Kaggle
 
-**Opción 1: Descarga Manual**
-1. Ve a [Reddit Depression Dataset](https://www.kaggle.com/datasets/infamouscoder/mental-health-social-media)
-2. Descarga `depression_dataset.csv`
-3. Colócalo en el directorio del proyecto
+**Dataset: Reddit Depression Dataset by Rishabh Kausish**
+- Link: https://www.kaggle.com/datasets/rishabhkausish/reddit-depression-dataset
+- Subreddits: teenagers, depression, suicidewatch, deepthoughts, happy, posts
+- Labels: 1 (Depression/SuicideWatch) y 0 (Otros)
 
-**Opción 2: API de Kaggle (Recomendado)**
+**Opción 1: Usar kagglehub (RECOMENDADO)**
 
 ```bash
-# Instalar CLI de Kaggle
-pip install kaggle
+# Instalar kagglehub
+pip install kagglehub
 
-# Configurar credenciales (coloca kaggle.json en ~/.kaggle/)
-kaggle datasets download -d infamouscoder/mental-health-social-media
-unzip mental-health-social-media.zip
+# El script train_model.py descargará automáticamente el dataset con:
+import kagglehub
+path = kagglehub.dataset_download("rishabhkausish/reddit-depression-dataset")
+```
+
+**Opción 2: Descarga Manual**
+1. Ve a [Reddit Depression Dataset](https://www.kaggle.com/datasets/rishabhkausish/reddit-depression-dataset)
+2. Descarga el archivo CSV
+3. Colócalo en el directorio del proyecto como `reddit_depression_dataset.csv`
+
+**Opción 3: API de Kaggle**
+
+```bash
+pip install kaggle
+kaggle datasets download -d rishabhkausish/reddit-depression-dataset
+unzip reddit-depression-dataset.zip
 ```
 
 ### Formato del Dataset
 
-El archivo debe tener estas columnas:
-- `Body`: Texto del post de Reddit
-- `Label`: Etiqueta (1 = depresión, 0 = normal)
+El archivo contiene estas columnas:
+- `Subreddit`: Subreddit donde se publicó el post
+- `Title`: Título del post
+- `Body`: Contenido del post
+- `Upvotes`: Número de upvotes
+- `Created UTC`: Timestamp de creación
+- `Number of Comments`: Número de comentarios
+- `Label`: 0 (Normal) o 1 (Depresión)
 
 ---
 

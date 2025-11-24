@@ -22,9 +22,13 @@ streamlit
 
 # --- Multi-Agente y LLM ---
 crewai
+crewai-tools
 langchain
 langchain-google-genai
 google-generativeai
+crewai[google-genai]
+litellm
 
 # --- Utilidades ---
 python-dotenv
+kagglehub
