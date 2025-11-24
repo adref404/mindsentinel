@@ -142,7 +142,7 @@ Este proyecto se basa en investigaciones como:
 ## 📞 Recursos de Ayuda
 
 ### Líneas de Crisis (en caso real)
-- 🇪🇸 España: **024** (Línea de Atención al Suicidio)
+- pe Perú: **0800-10828** (Infosalud )
 - 🇲🇽 México: **800 290 0024** (SAPTEL)
 - 🇦🇷 Argentina: **135** (Centro de Asistencia al Suicida)
 - 🇺🇸 USA: **988** (Suicide & Crisis Lifeline)

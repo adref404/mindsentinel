@@ -422,7 +422,7 @@ Este sistema es una **herramienta académica de investigación**.
 - Educación en IA explicable y sistemas multi-agente
 
 **En caso de crisis real:**
-- 🇪🇸 España: 024
+- pe Perú: 0800-10828
 - 🇲🇽 México: 800 290 0024
 - 🇦🇷 Argentina: 135
 - 🌍 Internacional: [findahelpline.com](https://findahelpline.com)
